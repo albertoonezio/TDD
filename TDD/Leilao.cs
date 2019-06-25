@@ -20,7 +20,32 @@ namespace TDD
 
         public void Propoe(Lance lance)
         {
-            Lances.Add(lance);
+            if (Lances.Count == 0 || podeDarLance(lance.Usuario))
+            {
+                Lances.Add(lance);
+            }
+        }
+
+        private bool podeDarLance(Usuario usuario)
+        {
+            return (!ultimoLanceDado().Usuario.Equals(usuario) && qtdDeLances(usuario) < 5);
+        }
+
+        private int qtdDeLances(Usuario usuario)
+        {
+            int total = 0;
+
+            foreach (var l in Lances)
+            {
+                if (l.Usuario.Equals(usuario)) total++;
+            }
+
+            return total;
+        }
+
+        private Lance ultimoLanceDado()
+        {
+            return Lances[Lances.Count - 1];
         }
     }
 }

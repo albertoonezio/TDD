@@ -33,6 +33,12 @@ namespace TDD
             TesteDoAvaliador avaliador = new TesteDoAvaliador();
             avaliador.DeveEntenderLanceEmOrdemCrescente();
             avaliador.DeveEntenderLanceEmOrdemCrescenteComOutrosValores();
+            avaliador.DeveEntenderLanceEmUmUnicoLance();
+            avaliador.DeveEncontrarOsTresMaioresLances();
+
+            LeilaoTest testeLeilao = new LeilaoTest();
+            testeLeilao.DeveReceberUmLance();
+            testeLeilao.DeveReceberVariosLances();
         }
     }
 }

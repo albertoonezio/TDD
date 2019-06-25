@@ -22,5 +22,16 @@ namespace TDD
             this.Id = id;
             this.Nome = nome;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Usuario outroUsuario = (Usuario)obj;
+            return outroUsuario.Id == this.Id && outroUsuario.Nome.Equals(this.Nome);
+        }
     }
 }

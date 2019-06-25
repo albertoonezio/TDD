@@ -10,20 +10,32 @@ namespace TDD
     [TestFixture]
     public class TesteDoAvaliador
     {
+        private Avaliador leiloeiro;
+        private Usuario joao;
+        private Usuario luana;
+        private Usuario alberto;
+
+        [SetUp]
+        public void CriaAvaliador()
+        {
+            this.leiloeiro = new Avaliador();
+
+            this.joao = new Usuario("Joao");
+            this.luana = new Usuario("Luana");
+            this.alberto = new Usuario("Alberto");
+        }
+
         [Test]
         public void DeveEntenderLanceEmOrdemCrescente()
         {
-            Usuario joao = new Usuario("Joao");
-            Usuario jose = new Usuario("Jose");
-            Usuario maria = new Usuario("Maria");
+            CriaAvaliador();
+            Leilao leilao = new CriadorDeLeilao().Para("PlayStation 3")
+                .Lance(luana, 250)
+                .Lance(joao, 300)
+                .Lance(alberto, 400)
+                .Constroi();
 
-            Leilao leilao = new Leilao("PlayStation 3");
-
-            leilao.Propoe(new Lance(maria, 250.0));
-            leilao.Propoe(new Lance(joao, 300.0));
-            leilao.Propoe(new Lance(jose, 400.0));
-
-            Avaliador leiloeiro = new Avaliador();
+            //CriaAvaliador();
             leiloeiro.Avalia(leilao);
 
             double maiorEsperado = 400;
@@ -35,23 +47,65 @@ namespace TDD
         [Test]
         public void DeveEntenderLanceEmOrdemCrescenteComOutrosValores()
         {
-            Usuario joao = new Usuario("Joao");
-            Usuario jose = new Usuario("Jose");
-            Usuario maria = new Usuario("Maria");
+            CriaAvaliador();
+            Leilao leilao = new CriadorDeLeilao().Para("PlayStation 3")
+                .Lance(luana, 2500)
+                .Lance(joao, 4000)
+                .Lance(alberto, 1000)
+                .Constroi();
 
-            Leilao leilao = new Leilao("PlayStation 3");
-
-            leilao.Propoe(new Lance(maria, 2500.0));
-            leilao.Propoe(new Lance(joao, 1000.0));
-            leilao.Propoe(new Lance(jose, 4000.0));
-
-            Avaliador leiloeiro = new Avaliador();
+            //CriaAvaliador();
             leiloeiro.Avalia(leilao);
 
             double maiorEsperado = 4000;
             double menorEsperado = 1000;
             Assert.AreEqual(maiorEsperado, leiloeiro.MaiorLance);
             Assert.AreEqual(menorEsperado, leiloeiro.MenorLance);
+        }
+
+        [Test]
+        public void DeveEntenderLanceEmUmUnicoLance()
+        {
+            CriaAvaliador();
+            Leilao leilao = new CriadorDeLeilao().Para("PlayStation 3")
+                .Lance(luana, 2500)
+                .Constroi();
+
+            //CriaAvaliador();
+            leiloeiro.Avalia(leilao);
+
+            Assert.AreEqual(2500, leiloeiro.MaiorLance, 0.0001);
+            Assert.AreEqual(2500, leiloeiro.MenorLance, 0.0001);
+        }
+
+        [Test]
+        public void DeveEncontrarOsTresMaioresLances()
+        {
+            CriaAvaliador();
+            Leilao leilao = new CriadorDeLeilao().Para("PlayStation 4")
+                .Lance(luana, 200)
+                .Lance(alberto, 300)
+                .Lance(luana, 400)
+                .Lance(alberto, 500)
+                .Constroi();
+
+            //CriaAvaliador();
+            leiloeiro.Avalia(leilao);
+
+            var maiores = leiloeiro.TresMaiores;
+
+            Assert.AreEqual(3, maiores.Count, 0.0001);
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception))]
+        public void NaoDeveAvaliarLeiloesSemNenhumLanceDado()
+        {
+            CriaAvaliador();
+
+            Leilao leilao = new CriadorDeLeilao().Para("Xbox One").Constroi();
+
+            leiloeiro.Avalia(leilao);
         }
     }
 }
